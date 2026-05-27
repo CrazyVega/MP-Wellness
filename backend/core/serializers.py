@@ -3,6 +3,61 @@ from rest_framework import serializers
 from .models import Servicio, Cita, User
 
 
+# ─── Usuario ──────────────────────────────────────────────────────────────────
+
+class UserSerializer(serializers.ModelSerializer):
+    """Lectura del perfil de usuario (sin exponer la contraseña)."""
+
+    class Meta:
+        model = User
+        fields = [
+            'id',
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'telefono',
+            'rol',
+        ]
+        read_only_fields = ['rol']
+
+
+class RegisterSerializer(serializers.ModelSerializer):
+    """Registro de nuevos usuarios (solo rol 'cliente')."""
+
+    password = serializers.CharField(
+        write_only=True,
+        min_length=8,
+        style={'input_type': 'password'}
+    )
+
+    class Meta:
+        model = User
+        fields = [
+            'username',
+            'password',
+            'email',
+            'first_name',
+            'last_name',
+            'telefono',
+        ]
+
+    def create(self, validated_data):
+        # Usa create_user para que la contraseña quede hasheada
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            password=validated_data['password'],
+            email=validated_data.get('email', ''),
+            first_name=validated_data.get('first_name', ''),
+            last_name=validated_data.get('last_name', ''),
+            telefono=validated_data.get('telefono', ''),
+            rol='cliente',          # el registro público siempre crea clientes
+        )
+        return user
+
+
+# ─── Servicio ─────────────────────────────────────────────────────────────────
+
 class ServicioSerializer(serializers.ModelSerializer):
 
     class Meta:

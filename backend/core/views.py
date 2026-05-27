@@ -1,12 +1,15 @@
 from rest_framework import viewsets, status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
-from .models import Servicio, Cita
+from .models import Servicio, Cita, User
 
 from .serializers import (
     ServicioSerializer,
-    CitaSerializer
+    CitaSerializer,
+    UserSerializer,
+    RegisterSerializer,
 )
 
 from django_filters.rest_framework import DjangoFilterBackend
@@ -15,6 +18,54 @@ from rest_framework.filters import (
     SearchFilter,
     OrderingFilter
 )
+
+from .permissions.roles import IsAdmin
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    """
+    POST   /api/usuarios/       → registro público (sin autenticación)
+    GET    /api/usuarios/me/    → perfil del usuario autenticado
+    GET    /api/usuarios/       → lista de usuarios (solo admin)
+    PATCH  /api/usuarios/{id}/  → editar perfil (propio o admin)
+    """
+
+    queryset = User.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return RegisterSerializer
+        return UserSerializer
+
+    def get_permissions(self):
+        if self.action == 'create':
+            # El registro es público: cualquiera puede crear su cuenta
+            return [AllowAny()]
+        return [IsAuthenticated()]
+
+    def get_queryset(self):
+        user = self.request.user
+        # Admin ve a todos; el resto solo se ve a sí mismo
+        if user.is_authenticated and user.rol == 'admin':
+            return User.objects.all()
+        return User.objects.filter(pk=user.pk)
+
+    @action(detail=False, methods=['get', 'patch'], url_path='me')
+    def me(self, request):
+        """Devuelve o actualiza el perfil del usuario autenticado."""
+        if request.method == 'GET':
+            serializer = UserSerializer(request.user)
+            return Response(serializer.data)
+
+        serializer = UserSerializer(
+            request.user,
+            data=request.data,
+            partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
 class ServicioViewSet(viewsets.ModelViewSet):
 
     queryset = Servicio.objects.all()
