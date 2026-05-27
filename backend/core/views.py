@@ -1,0 +1,144 @@
+from rest_framework import viewsets, status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
+from .models import Servicio, Cita
+
+from .serializers import (
+    ServicioSerializer,
+    CitaSerializer
+)
+
+from django_filters.rest_framework import DjangoFilterBackend
+
+from rest_framework.filters import (
+    SearchFilter,
+    OrderingFilter
+)
+class ServicioViewSet(viewsets.ModelViewSet):
+
+    queryset = Servicio.objects.all()
+
+    serializer_class = ServicioSerializer
+
+    permission_classes = [IsAuthenticated]
+
+
+class CitaViewSet(viewsets.ModelViewSet):
+
+    permission_classes = [IsAuthenticated]
+
+    queryset = Cita.objects.all()
+
+    serializer_class = CitaSerializer
+
+    permission_classes = [IsAuthenticated]
+    filter_backends = [
+        DjangoFilterBackend,
+        SearchFilter,
+        OrderingFilter
+    ]
+
+    filterset_fields = [
+        'estado',
+        'fecha',
+        'terapeuta'
+    ]
+
+    search_fields = [
+        'cliente__username',
+        'servicio__nombre'
+    ]
+
+    ordering_fields = [
+        'fecha',
+        'hora'
+    ]
+    # VER CITAS SEGÚN ROL
+    def get_queryset(self):
+
+        user = self.request.user
+
+        if user.rol == 'admin':
+
+            return Cita.objects.all()
+
+        elif user.rol == 'cliente':
+
+            return Cita.objects.filter(cliente=user)
+
+        elif user.rol == 'terapeuta':
+
+            return Cita.objects.filter(terapeuta=user)
+
+        return Cita.objects.none()
+
+    # CREAR CITA
+    def perform_create(self, serializer):
+
+        serializer.save(
+            cliente=self.request.user
+        )
+
+    # ACTUALIZAR CITA
+    def update(self, request, *args, **kwargs):
+
+        cita = self.get_object()
+
+        user = request.user
+
+        # CLIENTE NO PUEDE CAMBIAR ESTADO
+        if user.rol == 'cliente':
+
+            data = request.data.copy()
+
+            data['estado'] = cita.estado
+
+            serializer = self.get_serializer(
+                cita,
+                data=data
+            )
+
+            serializer.is_valid(raise_exception=True)
+
+            self.perform_update(serializer)
+
+            return Response(serializer.data)
+
+        # TERAPEUTA SOLO FINALIZA
+        elif user.rol == 'terapeuta':
+
+            data = request.data.copy()
+
+            data['estado'] = 'finalizada'
+
+            serializer = self.get_serializer(
+                cita,
+                data=data
+            )
+
+            serializer.is_valid(raise_exception=True)
+
+            self.perform_update(serializer)
+
+            return Response(serializer.data)
+
+        # ADMIN TODO
+        return super().update(request, *args, **kwargs)
+
+    # ELIMINAR CITA
+    def destroy(self, request, *args, **kwargs):
+
+        user = request.user
+
+        # SOLO ADMIN ELIMINA
+        if user.rol != 'admin':
+
+            return Response(
+                {
+                    'error': 'No tienes permiso para eliminar citas.'
+                },
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        return super().destroy(request, *args, **kwargs)
