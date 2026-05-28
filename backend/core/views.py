@@ -11,6 +11,14 @@ from .serializers import (
     UserSerializer,
     RegisterSerializer,
 )
+from .serializers import (
+
+    ServicioSerializer,
+
+    CitaSerializer,
+
+    RegistroSerializer
+)
 
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -222,3 +230,24 @@ def usuario_actual(request):
 
         'rol': user.rol
     })
+
+@api_view(['POST'])
+def registro(request):
+
+    serializer = RegistroSerializer(
+        data=request.data
+    )
+
+    if serializer.is_valid():
+
+        serializer.save()
+
+        return Response({
+
+            'mensaje': 'Usuario creado'
+        })
+
+    return Response(
+        serializer.errors,
+        status=400
+    )

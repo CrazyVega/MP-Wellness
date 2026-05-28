@@ -13,7 +13,7 @@ import Dashboard from './pages/Dashboard'
 import Agendar from './pages/Agendar'
 import AdminCitas from './pages/AdminCitas'
 import MainLayout from './layouts/MainLayout'
-
+import Register from './pages/Register'
 import ProtectedRoute from './routes/ProtectedRoute'
 
 
@@ -33,7 +33,10 @@ function App() {
             </MainLayout>
           }
         />
-
+<Route
+  path="/registro"
+  element={<Register />}
+/>
         <Route
           path="/login"
           element={<Login />}
