@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import axios from 'axios'
-
+import InternalNavbar from '../components/InternalNavbar'
 import { useNavigate } from 'react-router-dom'
 
 
@@ -59,7 +59,8 @@ localStorage.setItem(
 
 
     return (
-
+<div className="min-h-screen bg-[#f5f0ea] p-0">
+            <InternalNavbar />
         <div className="min-h-screen flex items-center justify-center bg-[#f5f0ea] px-6">
 
             <div className="bg-white w-full max-w-md rounded-[40px] shadow-2xl p-12">
@@ -120,6 +121,7 @@ localStorage.setItem(
             </div>
 
         </div>
+    </div>    
     )
 }
 

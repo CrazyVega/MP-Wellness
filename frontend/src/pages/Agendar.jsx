@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-
+import InternalNavbar from '../components/InternalNavbar'
 import axios from 'axios'
 
 
@@ -110,9 +110,10 @@ function Agendar() {
 
 
     return (
-
+<div className="min-h-screen bg-[#f5f0ea] p-0">
+            <InternalNavbar />
         <div className="min-h-screen bg-[#f5f0ea] flex justify-center items-center px-6 py-20">
-
+            
             <div className="bg-white w-full max-w-2xl rounded-[40px] shadow-2xl p-12">
 
                 <h1 className="text-5xl text-[#9b7774] font-serif text-center mb-10">
@@ -217,6 +218,7 @@ function Agendar() {
 
             </div>
 
+        </div>
         </div>
     )
 }

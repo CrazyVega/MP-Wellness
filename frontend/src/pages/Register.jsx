@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import axios from 'axios'
-
+import InternalNavbar from '../components/InternalNavbar'
 import { useNavigate } from 'react-router-dom'
 
 
@@ -44,8 +44,8 @@ function Register() {
 
     return (
 
-        <div className="min-h-screen flex justify-center items-center bg-[#f5f0ea] px-6">
-
+        <div className="min-h-screen bg-[#f5f0ea] p-20">
+            <InternalNavbar />
             <div className="bg-white p-12 rounded-[40px] shadow-2xl w-full max-w-md">
 
                 <h1 className="text-5xl text-[#9b7774] font-serif text-center mb-10">

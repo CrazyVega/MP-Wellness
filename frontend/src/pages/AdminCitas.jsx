@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import axios from 'axios'
-
+import InternalNavbar from '../components/InternalNavbar'
 
 function AdminCitas() {
 
@@ -65,7 +65,8 @@ function AdminCitas() {
 
 
     return (
-
+<div className="min-h-screen bg-[#f5f0ea] p-0">
+            <InternalNavbar />
         <div className="min-h-screen bg-[#f5f0ea] p-20">
 
             <div className="mb-14">
@@ -177,6 +178,7 @@ function AdminCitas() {
             </div>
 
         </div>
+    </div>    
     )
 }
 
