@@ -65,7 +65,7 @@ function InternalNavbar() {
                         href="/dashboard"
                         className="text-[#7d6562] hover:text-[#9b7774] transition"
                     >
-                        Dashboard
+                        Citas
                     </a>
 
                     {rol === 'cliente' && (

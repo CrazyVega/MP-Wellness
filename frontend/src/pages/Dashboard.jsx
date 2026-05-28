@@ -83,7 +83,7 @@ function Dashboard() {
 
                     <h1 className="text-6xl text-[#9b7774] font-serif">
 
-                        Dashboard
+                        Citas
 
                     </h1>
 
