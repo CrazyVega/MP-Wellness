@@ -23,13 +23,6 @@ function Hero() {
 
                 <div className="flex gap-6 mt-4">
 
-                    <button className="bg-[#9b7774] text-white px-8 py-4 rounded-full text-lg hover:opacity-90 transition">
-                        Conocer servicios
-                    </button>
-
-                    <button className="border border-[#9b7774] text-[#9b7774] px-8 py-4 rounded-full text-lg hover:bg-[#9b7774] hover:text-white transition">
-                        Crear cuenta
-                    </button>
 
                 </div>
 

@@ -96,7 +96,7 @@ function Navbar() {
                                 href="/dashboard"
                                 className="hover:text-[#9b7774] transition"
                             >
-                                Dashboard
+                                Citas
                             </a>
                         </li>
 
@@ -122,7 +122,7 @@ function Navbar() {
                                 href="/dashboard"
                                 className="hover:text-[#9b7774] transition"
                             >
-                                Dashboard
+                                Citas
                             </a>
                         </li>
 
@@ -147,7 +147,7 @@ function Navbar() {
                             href="/dashboard"
                             className="hover:text-[#9b7774] transition"
                         >
-                            Dashboard
+                            Citas
                         </a>
                     </li>
                 )}
