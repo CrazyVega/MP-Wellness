@@ -2,9 +2,9 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
-
-from .models import Servicio, Cita, User
-
+from rest_framework.decorators import api_view
+from .models import Servicio, Cita
+from .models import User
 from .serializers import (
     ServicioSerializer,
     CitaSerializer,
@@ -193,3 +193,32 @@ class CitaViewSet(viewsets.ModelViewSet):
             )
 
         return super().destroy(request, *args, **kwargs)
+    
+    from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+
+@api_view(['GET'])
+def terapeutas(request):
+
+    terapeutas = User.objects.filter(
+        rol='terapeuta'
+    ).values(
+        'id',
+        'username'
+    )
+
+    return Response(terapeutas)
+@api_view(['GET'])
+def usuario_actual(request):
+
+    user = request.user
+
+    return Response({
+
+        'id': user.id,
+
+        'username': user.username,
+
+        'rol': user.rol
+    })
